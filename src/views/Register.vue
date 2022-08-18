@@ -8,28 +8,33 @@
                         <router-link :to="{name: 'login'}">Need an account?</router-link>
                     </p>
 
-                    VALIDATION ERRORS
+                    <McvValidationErrors
+                        v-if="validationErrors"
+                        :validation-errors="validationErrors" />
                     
                     <form @submit.prevent="onSubmit">
                         <fieldset class="form-group">
                             <input
                                 type="text"
                                 class="form-control form-control-lg"
-                                placeholder="Username"    
+                                placeholder="Username"
+                                v-model="username"  
                             />
                         </fieldset>
                         <fieldset class="form-group">
                             <input
                                 type="text"
                                 class="form-control form-control-lg"
-                                placeholder="Email"    
+                                placeholder="Email"
+                                v-model="email"
                             />
                         </fieldset>
                         <fieldset class="form-group">
                             <input
                                 type="password"
                                 class="form-control form-control-lg"
-                                placeholder="Password"    
+                                placeholder="Password"
+                                v-model="password"
                             />
                         </fieldset>
                         <button
@@ -46,21 +51,36 @@
 </template>
 
 <script>
+import McvValidationErrors from '@/components/ValidationErrors'
 export default {
     name: 'MvcRegister',
+    components: {
+        McvValidationErrors
+    },
+    data () {
+        return {
+            email: '',
+            password: '',
+            username: ''
+        }
+    },
     computed: {
         isSubmitting() {
             return this.$store.state.auth.isSubmitting
+        },
+        validationErrors() {
+            return this.$store.state.auth.validationErrors
         }
     },
     methods: {
         onSubmit() {
             this.$store.dispatch('register', {
-                email: "",
-                username: "",
-                password: ""
+                email: this.email,
+                username: this.username,
+                password: this.password
             }).then(user => {
                 console.log('successfully register user', user)
+                this.$router.push({name: 'home'})
             })
         }
     }
