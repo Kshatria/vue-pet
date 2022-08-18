@@ -29,10 +29,15 @@
                             <input
                                 type="password"
                                 class="form-control form-control-lg"
-                                placeholder="password"    
+                                placeholder="Password"    
                             />
                         </fieldset>
-                        <button class="btn btn-lg btn-primary pull-xs-right">Sign Up</button>
+                        <button
+                            class="btn btn-lg btn-primary pull-xs-right"
+                            :disabled="isSubmitting"
+                        >
+                            Sign Up
+                        </button>
                     </form>
                 </div>
             </div>
@@ -43,9 +48,20 @@
 <script>
 export default {
     name: 'MvcRegister',
+    computed: {
+        isSubmitting() {
+            return this.$store.state.auth.isSubmitting
+        }
+    },
     methods: {
         onSubmit() {
-            console.log('onSubmit')
+            this.$store.dispatch('register', {
+                email: "",
+                username: "",
+                password: ""
+            }).then(user => {
+                console.log('successfully register user', user)
+            })
         }
     }
 }
